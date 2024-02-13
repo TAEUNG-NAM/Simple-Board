@@ -1,0 +1,23 @@
+{{>layouts/header}}
+
+<table class="table text-center">
+    <thead>
+    <tr>
+        <th scope="col" class="col">ID</th>
+        <th scope="col" class="col-6">TITLE</th>
+        <th scope="col" class="col-6">CONTENT</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#article}}
+    <tr>
+        <th scope="row">{{id}}</th>
+        <td>{{title}}</td>
+        <td>{{content}}</td>
+    </tr>
+    {{/article}}
+    </tbody>
+</table>
+
+<a href="/articles"><button class="btn btn-success m-2">Home</button></a>
+{{>layouts/footer}}
