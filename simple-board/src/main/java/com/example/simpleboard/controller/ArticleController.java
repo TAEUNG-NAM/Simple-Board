@@ -67,4 +67,17 @@ public class ArticleController {
         // 3. 페이지 반환
         return "articles/main";
     }
+
+    // 게시글 수정 메소드
+    @GetMapping("/articles/{id}/edit")
+    public String edit(@PathVariable Long id, Model model){
+        // 수정할 데이터 호출
+        Article target = articleRepository.findById(id).orElse(null);
+
+        // 모델에 데이터 등록
+        model.addAttribute("article", target);
+
+        // 페이지 반환
+        return "articles/edit";
+    }
 }
