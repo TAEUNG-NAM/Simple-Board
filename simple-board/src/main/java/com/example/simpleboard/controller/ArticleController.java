@@ -68,7 +68,7 @@ public class ArticleController {
         return "articles/main";
     }
 
-    // 게시글 수정 메소드
+    // 게시글 수정 메소드 #1
     @GetMapping("/articles/{id}/edit")
     public String edit(@PathVariable Long id, Model model){
         // 수정할 데이터 호출
@@ -79,5 +79,22 @@ public class ArticleController {
 
         // 페이지 반환
         return "articles/edit";
+    }
+
+    // 게시글 수정 메소드 #2 (페이지 form에서 받은 데이터)
+    @PostMapping("/articles/update")
+    public String update(ArticleForm form){
+        // Dto를 Entity로 변환
+        Article article = form.toEntity();
+        log.info(article.toString());
+
+        // Entity를 DB에 갱신
+        Article target = articleRepository.findById(article.getId()).orElse(null);
+        if(target != null){
+            articleRepository.save(article);
+        }
+
+        // 수정된 페이지 반환
+        return "redirect:/articles";
     }
 }
