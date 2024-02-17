@@ -1,13 +1,7 @@
 package com.example.simpleboard.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity     // DB가 해당 객체를 인식!
 @AllArgsConstructor
@@ -17,7 +11,7 @@ import lombok.ToString;
 public class Article {
 
     @Id     // PK
-    @GeneratedValue     // 자동 생성
+    @GeneratedValue(strategy = GenerationType.IDENTITY)     // 자동 생성(DB에서 id 자동 생성)
     private Long id;
 
     @Column
@@ -26,4 +20,10 @@ public class Article {
     @Column
     private String content;
 
+    public void patch(Article article) {
+        if(article.getTitle() != null)
+            this.title = article.getTitle();
+        if(article.getContent() != null)
+            this.content = article.getContent();
+    }
 }
