@@ -47,7 +47,7 @@ public class ArticleService {
         Article target = articleRepository.findById(id).orElse(null);
 
         // 잘못된 요청 처리(기존 데이터가 없거나, id 불일치)
-        if (target == null || id != article.getId())
+        if (target == null || id != article.getId() || (article.getTitle()  == null && article.getContent() == null))
             return null;
 
         // 새로운 엔티티 저장 및 결과 반환
