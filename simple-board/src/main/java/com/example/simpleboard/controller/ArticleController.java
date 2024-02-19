@@ -1,8 +1,12 @@
 package com.example.simpleboard.controller;
 
 import com.example.simpleboard.dto.ArticleForm;
+import com.example.simpleboard.dto.CommentDto;
 import com.example.simpleboard.entity.Article;
+import com.example.simpleboard.entity.Comment;
 import com.example.simpleboard.repository.ArticleRepository;
+import com.example.simpleboard.repository.CommentRepository;
+import com.example.simpleboard.service.CommentService;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +25,8 @@ public class ArticleController {
 
     @Autowired
     private ArticleRepository articleRepository;
+    @Autowired
+    private CommentService commentService;
 
     // 게시글 생성 페이지
     @GetMapping("/articles/new")
@@ -48,9 +54,11 @@ public class ArticleController {
     public String show(@PathVariable Long id, Model model){
         // 1. id로 DB에서 Entity를 호출
         Article articleEntity = articleRepository.findById(id).orElse(null);
+        List<CommentDto> commentDtos = commentService.comments(id);
 
         // 2. 가져온 데이터를 모델에 등록
         model.addAttribute("article", articleEntity);
+        model.addAttribute("commentDtos", commentDtos);
 
         // 3. 페이지 반환
         return "articles/show";
