@@ -15,7 +15,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@SpringBootTest     // 스프링부트 연동 테스트
 class ArticleServiceTest {
     @Autowired
     ArticleService articleService;
