@@ -1,8 +1,110 @@
 <div id="comments-list">
     {{#commentDtos}}
         <div class="card m-2" id="comments-{{id}}">
-            <div class="card-header">{{nickname}}</div>
+            <div class="card-header">{{nickname}}
+                <!-- Button trigger modal -->
+                <button type="button"
+                        class="btn btn-sm btn-outline-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#comment-edit-modal"
+                        data-bs-id="{{id}}"
+                        data-bs-nickname="{{nickname}}"
+                        data-bs-body="{{body}}"
+                        data-bs-article-id="{{articleId}}">수정</button>
+            </div>
             <div class="card-body">{{body}}</div>
         </div>
     {{/commentDtos}}
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="comment-edit-modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">댓글 수정</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <!--닉네임 입력-->
+                    <div class="mb-3">
+                        <label class="form-label">닉네임</label>
+                        <input class="form-control form-control-sm" id="edit-comment-nickname">
+                    </div>
+
+                    <!-- 댓글 내용 입력 -->
+                    <div class="mb-3">
+                        <label class="form-label">내용</label>
+                        <textarea class="form-control form-control-sm" id="edit-comment-body" rows="3"></textarea>
+                    </div>
+
+                    <!-- 히든 인풋 -->
+                    <input type="hidden" id="edit-comment-id">
+                    <input type="hidden" id="edit-comment-article-id">
+
+                    <button type="button" class="btn btn-outline-primary" id="edit-comment-btn">수정 완료</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+{
+    // 모달 요소 선택
+    const commentEditModal = document.querySelector("#comment-edit-modal");
+
+    // 모달 이벤트 감지
+    commentEditModal.addEventListener("show.bs.modal", function(event) {
+        console.log("모달이 열렸습니다.");
+        // 트리거 버튼 선택
+        const modalBtn = event.relatedTarget;
+
+        // 트리거 버튼에서 데이터 가져오기
+        const id = modalBtn.getAttribute("data-bs-id");
+        const nickname = modalBtn.getAttribute("data-bs-nickname");
+        const body = modalBtn.getAttribute("data-bs-body");
+        const articleId = modalBtn.getAttribute("data-bs-article-id");
+
+        // 데이터 반영
+        document.querySelector("#edit-comment-id").value = id;
+        document.querySelector("#edit-comment-nickname").value = nickname;
+        document.querySelector("#edit-comment-body").value = body;
+        document.querySelector("#edit-comment-article-id").value = articleId;
+    });
+}
+
+
+{
+    // 수정 완료 버튼 변수화
+    const commentUpdateBtn = document.querySelector("#edit-comment-btn");
+
+    // 클릭 이벤트 감지 및 처리
+    commentUpdateBtn.addEventListener("click", event => {
+        comment = {
+            id: document.querySelector("#edit-comment-id").value,
+            nickname: document.querySelector("#edit-comment-nickname").value,
+            body: document.querySelector("#edit-comment-body").value,
+            articleId: document.querySelector("#edit-comment-article-id").value
+        };
+        console.log(comment);
+
+        // fetch() - Talend API 요청을 JS로 보내줌!
+        const url = `/api/comments/${comment.id}`;
+        fetch(url, {
+            method: "PATCH",
+            body: JSON.stringify(comment),
+            headers:{
+                "Content-Type": "application/json"
+            }
+        }).then(response => {
+            const msg = (response.ok) ? "댓글 수정 완료!" : "댓글 수정 실패!";
+            alert(msg);
+
+            // 페이지 새로고침
+            window.location.reload();
+        });
+    });
+}
+</script>
