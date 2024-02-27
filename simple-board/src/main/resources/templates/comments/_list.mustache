@@ -2,7 +2,7 @@
     {{#commentDtos}}
         <div class="card m-2" id="comments-{{id}}">
             <div class="card-header">{{nickname}}
-                <!-- Button trigger modal -->
+                <!-- 수정 버튼 trigger modal -->
                 <button type="button"
                         class="btn btn-sm btn-outline-primary"
                         data-bs-toggle="modal"
@@ -11,6 +11,11 @@
                         data-bs-nickname="{{nickname}}"
                         data-bs-body="{{body}}"
                         data-bs-article-id="{{articleId}}">수정</button>
+
+                <!-- 삭제 버튼 -->
+                <button type="button"
+                        class="btn btn-sm btn-outline-danger delete-comment-btn"
+                        data-comment-id="{{id}}">삭제</button>
             </div>
             <div class="card-body">{{body}}</div>
         </div>
@@ -50,6 +55,7 @@
     </div>
 </div>
 
+<!--모달 이벤트 처리(댓글 수정)-->
 <script>
 {
     // 모달 요소 선택
@@ -104,6 +110,46 @@
 
             // 페이지 새로고침
             window.location.reload();
+        });
+    });
+}
+</script>
+
+<!--댓글 삭제 이벤트 처리-->
+<script>
+{
+    // 삭제 버튼 변수화
+    const commentDeleteBtns = document.querySelectorAll(".delete-comment-btn");
+
+    // 모든 삭제 버튼 이벤트 처리를 위한 반복문
+    commentDeleteBtns.forEach(btn => {
+        // 각 삭제 버튼 이벤트 처리
+        btn.addEventListener("click", event => {
+            console.log("삭제 버튼 클릭되었습니다.");
+            // 이벤트 발생 요소 선택
+            const commentDeleteBtn = event.srcElement;
+
+            // 삭제할 댓글id 가져오기
+            const commentId = commentDeleteBtn.getAttribute("data-comment-id");
+            console.log(`${commentId}번 댓글 삭제 요청!`);
+
+            const url = `/api/comments/${commentId}`;
+            fetch(url, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type":"application/json"
+                }
+            }).then(response => {
+                // 댓글 삭제 실패
+                if(!response.ok){
+                    alert("댓글 삭제 실패!");
+                    return;
+                }
+                else{
+                    alert("댓글 삭제 성공!");
+                    window.location.reload();
+                }
+            });
         });
     });
 }
