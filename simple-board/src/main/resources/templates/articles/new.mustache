@@ -1,16 +1,53 @@
 {{>layouts/header}}
 
-<form class="container" action="/articles/create" method="post">
+<form class="container"> <!--  action="/articles/create" method="post" -->
     <div class="mb-3">
         <label class="form-label">제목</label>
-        <input type="text" class="form-control" name="title">
+        <input type="text" class="form-control" name="title" id="new-article-title">
     </div>
     <div class="mb-3">
         <label class="form-label">내용</label>
-        <textarea class="form-control" rows="3" name="content"></textarea>
+        <textarea class="form-control" rows="3" name="content" id="new-article-content"></textarea>
     </div>
-    <button type="submit" class="btn btn-primary">Create</button>
+    <button type="submit" class="btn btn-primary" id="new-article-btn">Create</button>
     <a href="/articles">Back</a>
 </form>
 
 {{>layouts/footer}}
+
+<script>
+{
+    // article 생성 버튼 변수화
+    const articleCreateBtn = document.querySelector("#new-article-btn");
+
+    // 클릭 이벤트 리스너
+    articleCreateBtn.addEventListener("click", () => {
+        // 새 게시글 객체 생성
+        const article = {
+            title: document.querySelector("#new-article-title").value,
+            content: document.querySelector("#new-article-content").value
+        };
+
+        //fetch() - API 요청을 JS로 보내줌
+        const url = "/api/articles";
+        fetch(url, {
+            method: "POST",
+            body: JSON.stringify(article),
+            headers:{
+                "Content-Type":"application/json"
+            }
+        })
+        .then(response => {
+            // http 응답에 따른 메세지 출력 및 메인화면 이동
+            if(response.ok){
+                window.location.href = "/articles";
+                alert("게시글이 작성되었습니다.");
+            }
+            else{
+                alert("게시글 작성 실패..!");
+            }
+
+        });
+    });
+}
+</script>

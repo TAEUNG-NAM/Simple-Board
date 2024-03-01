@@ -1,13 +1,10 @@
 package com.example.simpleboard.controller;
 
-import com.example.simpleboard.dto.ArticleForm;
+import com.example.simpleboard.dto.ArticleDto;
 import com.example.simpleboard.dto.CommentDto;
 import com.example.simpleboard.entity.Article;
-import com.example.simpleboard.entity.Comment;
 import com.example.simpleboard.repository.ArticleRepository;
-import com.example.simpleboard.repository.CommentRepository;
 import com.example.simpleboard.service.CommentService;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,10 +33,10 @@ public class ArticleController {
 
     // 게시글 생성 메소드
     @PostMapping("/articles/create")
-    public String createArticle(ArticleForm form){
+    public String createArticle(ArticleDto dto){
 
         // 1. DTO -> Entity 변환
-        Article article = form.toEntity();
+        Article article = dto.toEntity();
         log.info(article.toString());
 
         // 2. Repository를 이용해 Entity를 DB에 저장
@@ -92,7 +89,7 @@ public class ArticleController {
 
     // 게시글 수정 메소드 #2 (페이지 form에서 받은 데이터)
     @PostMapping("/articles/update")
-    public String update(ArticleForm form){
+    public String update(ArticleDto form){
         // Dto를 Entity로 변환
         Article article = form.toEntity();
         log.info(article.toString());

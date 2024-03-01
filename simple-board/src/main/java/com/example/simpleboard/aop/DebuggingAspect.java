@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component  // IOC 컨테이너가 해당 객체를 생성 및 관리
 @Slf4j
 public class DebuggingAspect {
-    @Pointcut("execution(* com.example.simpleboard.service..*(..))")
+    @Pointcut("execution(* com.example.simpleboard.api.*.*(..))")   // api 패키지 안 모든 클래스 지정
     private void cut(){}
 
     @Before("cut()")    // 실행 시점 : 호출 전
