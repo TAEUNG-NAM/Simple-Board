@@ -1,15 +1,12 @@
 package com.example.simpleboard.service;
 
-import com.example.simpleboard.dto.ArticleForm;
+import com.example.simpleboard.dto.ArticleDto;
 import com.example.simpleboard.entity.Article;
 import jakarta.transaction.Transactional;
-import jdk.jfr.ContentType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -73,13 +70,13 @@ class ArticleServiceTest {
         // 준비
         String title = "라라라라";
         String content = "ㄹㄹㄹㄹ";
-        ArticleForm dto = new ArticleForm(null, title, content);
+        ArticleDto dto = new ArticleDto(null, title, content);
 
         // 예상
         Article expected = new Article(4L, title, content);
 
         // 실제
-        Article article = articleService.create(dto);
+        ArticleDto article = articleService.create(dto);
 
         // 비교
         assertEquals(expected.toString(), article.toString());
@@ -92,13 +89,13 @@ class ArticleServiceTest {
         Long id = 4L;
         String title = "라라라라";
         String content = "ㄹㄹㄹㄹ";
-        ArticleForm dto = new ArticleForm(id, title, content);
+        ArticleDto dto = new ArticleDto(id, title, content);
 
         // 예상
         Article expected = null;
 
         // 실제
-        Article article = articleService.create(dto);
+        ArticleDto article = articleService.create(dto);
 
         // 비교
         assertEquals(expected, article);
@@ -111,13 +108,13 @@ class ArticleServiceTest {
         Long id = 3L;
         String title = "라라라라";
         String content = "ㄹㄹㄹㄹ";
-        ArticleForm dto = new ArticleForm(id, title, content);
+        ArticleDto dto = new ArticleDto(id, title, content);
 
         // 예상
         Article expected = new Article(id, "라라라라", "ㄹㄹㄹㄹ");
 
         // 실제
-        Article article = articleService.update(id, dto);
+        ArticleDto article = articleService.update(id, dto);
 
         // 비교
         assertEquals(expected.toString(), article.toString());
@@ -130,13 +127,13 @@ class ArticleServiceTest {
         Long id = 3L;
         String title = "라라라라";
         String content = null;
-        ArticleForm dto = new ArticleForm(id, title, content);
+        ArticleDto dto = new ArticleDto(id, title, content);
 
         // 예상
         Article expected = new Article(id, "라라라라", "ㄷㄷㄷㄷ");
 
         // 실제
-        Article article = articleService.update(id, dto);
+        ArticleDto article = articleService.update(id, dto);
 
         // 비교
         assertEquals(expected.toString(), article.toString());
@@ -149,13 +146,13 @@ class ArticleServiceTest {
         Long id = 4L;
         String title = "라라라라";
         String content = "ㄹㄹㄹㄹ";
-        ArticleForm dto = new ArticleForm(id, title, content);
+        ArticleDto dto = new ArticleDto(id, title, content);
 
         // 예상
         Article expected = null;
 
         // 실제
-        Article article = articleService.update(id, dto);
+        ArticleDto article = articleService.update(id, dto);
 
         // 비교
         assertEquals(expected, article);
@@ -168,13 +165,13 @@ class ArticleServiceTest {
         Long id = 3L;
         String title = null;
         String content = null;
-        ArticleForm dto = new ArticleForm(id, title, content);
+        ArticleDto dto = new ArticleDto(id, title, content);
 
         // 예상
         Article expected = null;
 
         // 실제
-        Article article = articleService.update(id, dto);
+        ArticleDto article = articleService.update(id, dto);
 
         // 비교
         assertEquals(expected, article);
@@ -192,7 +189,7 @@ class ArticleServiceTest {
         Article expected = new Article(id, title, content);
 
         // 실제
-        Article article = articleService.delete(id);
+        ArticleDto article = articleService.delete(id);
 
         // 비교
         assertEquals(expected.toString(), article.toString());
@@ -208,7 +205,7 @@ class ArticleServiceTest {
         Article expected = null;
 
         // 실제
-        Article article = articleService.delete(id);
+        ArticleDto article = articleService.delete(id);
 
         // 비교
         assertEquals(expected, article);

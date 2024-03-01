@@ -1,10 +1,8 @@
 package com.example.simpleboard.api;
 
-import com.example.simpleboard.dto.ArticleForm;
+import com.example.simpleboard.dto.ArticleDto;
 import com.example.simpleboard.entity.Article;
-import com.example.simpleboard.repository.ArticleRepository;
 import com.example.simpleboard.service.ArticleService;
-import jakarta.persistence.Id;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,8 +33,8 @@ public class ArticleApiController {
 
     // POST
     @PostMapping("/api/articles")
-    public ResponseEntity<Article> create(@RequestBody ArticleForm dto){
-        Article created = articleService.create(dto);
+    public ResponseEntity<ArticleDto> create(@RequestBody ArticleDto dto){
+        ArticleDto created = articleService.create(dto);
         return (created != null) ?
                 ResponseEntity.status(HttpStatus.OK).body(created) :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -44,8 +42,8 @@ public class ArticleApiController {
 
     // PATCH
     @PatchMapping("/api/articles/{id}")
-    public ResponseEntity<Article> update(@PathVariable Long id, @RequestBody ArticleForm dto){
-        Article updated = articleService.update(id, dto);
+    public ResponseEntity<ArticleDto> update(@PathVariable Long id, @RequestBody ArticleDto dto){
+        ArticleDto updated = articleService.update(id, dto);
         return (updated != null) ?
                 ResponseEntity.status(HttpStatus.OK).body(updated) :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -53,8 +51,8 @@ public class ArticleApiController {
 
     // DELETE
     @DeleteMapping("/api/articles/{id}")
-    public ResponseEntity<Article> delete(@PathVariable Long id){
-        Article deleted = articleService.delete(id);
+    public ResponseEntity<ArticleDto> delete(@PathVariable Long id){
+        ArticleDto deleted = articleService.delete(id);
         return (deleted != null) ?
                 ResponseEntity.status(HttpStatus.OK).body(deleted) :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -62,7 +60,7 @@ public class ArticleApiController {
 
     // 트랜잭션 -> 실패 -> 롤백!
     @PostMapping("/api/transaction-test")
-    public ResponseEntity<List<Article>> transactionTest(@RequestBody List<ArticleForm> dtos){
+    public ResponseEntity<List<Article>> transactionTest(@RequestBody List<ArticleDto> dtos){
         List<Article> articleList = articleService.createArticles(dtos);
         return (articleList != null) ?
                 ResponseEntity.status(HttpStatus.OK).body(articleList) :

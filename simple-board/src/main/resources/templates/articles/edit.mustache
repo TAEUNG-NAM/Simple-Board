@@ -2,18 +2,56 @@
 
 {{#article}}
 <!--    페이지 form에서 입력 받은 정보를 action을 통해 /article/update를 호출하는 개념-->
-    <form class="container" action="/articles/update" method="post">
-        <input name="id" type="hidden" value="{{id}}">
+    <form class="container"> <!--  action="/articles/update" method="post" -->
+        <input id="article-id" type="hidden" value="{{id}}">
         <div class="mb-3">
             <label class="form-label">제목</label>
-            <input type="text" class="form-control" name="title" value="{{title}}">
+            <input type="text" class="form-control" id="update-article-title" value="{{title}}">
         </div>
         <div class="mb-3">
             <label class="form-label">내용</label>
-            <textarea class="form-control" rows="3" name="content">{{content}}</textarea>
+            <textarea class="form-control" rows="3" id="update-article-content">{{content}}</textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-primary" id="update-article-btn">Submit</button>
         <a href="/articles/{{id}}">Back</a>
     </form>
 {{/article}}
 {{>layouts/footer}}
+
+<!-- 게시글 수정 API 요청(JS) -->
+<script>
+{
+    // 수정 버튼 변수화
+    const articleUpdateBtn = document.querySelector("#update-article-btn");
+
+    // 버튼 클릭 이벤트 리스너
+    articleUpdateBtn.addEventListener("click", () => {
+        // 새로운 article 객체 생성
+        const newArticle = {
+            title: document.querySelector("#update-article-title").value,
+            content: document.querySelector("#update-article-content").value,
+            id: document.querySelector("#article-id").value
+        };
+        console.log(newArticle);
+
+        // fetch() - JS를 통한 API 요청 메소드
+        const url = `/api/articles/${newArticle.id}`;
+        fetch(url, {
+            method: "PATCH",
+            body: JSON.stringify(newArticle),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(response => {
+            // http 응답에 따른 메시지 및 리다이렉트
+            if(response.ok){
+                window.location.href = "/articles";
+                alert("게시글 수정 완료!");
+            }
+            else
+                alert("게시글 수정 실패!");
+        });
+    });
+
+}
+</script>

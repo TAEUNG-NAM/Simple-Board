@@ -1,6 +1,6 @@
 {{>layouts/header}}
 
-<table class="table text-center">
+<table class="table text-center" id="article-table">
     <thead>
     <tr>
         <th scope="col" class="col">ID</th>
@@ -11,6 +11,7 @@
     <tbody>
     {{#article}}
     <tr>
+        <input type="hidden" id="article-id" value="{{id}}">
         <th scope="row">{{id}}</th>
         <td>{{title}}</td>
         <td>{{content}}</td>
@@ -20,7 +21,7 @@
 </table>
 
 <a href="/articles/{{article.id}}/edit"><button class="btn btn-success ms-2">Edit</button></a>
-<a href="/articles/{{article.id}}/delete"><button class="btn btn-danger">Delete</button></a>
+<button type="button" class="btn btn-danger" id="delete-article-btn">Delete</button>
 <a href="/articles">Home</a>
 <hr>
 
@@ -28,3 +29,31 @@
 {{>comments/_comments}}
 
 {{>layouts/footer}}
+
+<!-- 게시글 삭제 API 요청 -->
+<script>
+{
+    // 삭제 버튼 변수화
+    const deleteArticleBtn = document.querySelector("#delete-article-btn");
+
+    deleteArticleBtn.addEventListener("click", () => {
+        console.log("삭제 버튼 클릭");
+        // fetch() - JS을 통해 API 요청 메소드
+        articleId = document.querySelector("#article-id").value;    // 게시글 삭제를 위한 ID
+        const url = `/api/articles/${articleId}`;
+        fetch(url, {
+            method: "DELETE",
+            headers: {
+                "Content-Type" : "application/json"
+            }
+        }).then(response => {
+            if(response.ok){
+                window.location.href = "/articles";
+                alert("게시글 삭제 완료!");
+            }
+            else
+                alert("게시글 삭제 실패!");
+        });
+    });
+}
+</script>
