@@ -5,10 +5,10 @@ import com.example.simpleboard.entity.Article;
 import com.example.simpleboard.entity.Comment;
 import com.example.simpleboard.repository.ArticleRepository;
 import com.example.simpleboard.repository.CommentRepository;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,11 +24,15 @@ public class ArticleService {
 
 
     // GET
+    //@Transactional(readOnly = true) : readOnly = true를 추가하면 트랜잭션 범위는 추가하되,
+    //조회기능만 남겨두어 조회속도가 개선됨. 등록,수정,삭제가 없는 서비스메소드에 사용하는것을 추천
+    @Transactional(readOnly = true)
     public List<Article> indexAll() {
         return articleRepository.findAll();
     }
 
     // GET
+    @Transactional(readOnly = true)
     public Article index(Long id) {
         return articleRepository.findById(id).orElse(null);
     }

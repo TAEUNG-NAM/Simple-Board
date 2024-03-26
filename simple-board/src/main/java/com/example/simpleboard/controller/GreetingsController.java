@@ -6,10 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class GreetingsController {
-    @GetMapping("/hi")
-    public String nicetomeetyou(Model model) {
-        model.addAttribute("username", "HONGPARK");
-        return "greetings";
+    @GetMapping("/loginForm")
+    public String loginForm() {
+        return "loginForm";
     }
 
     @GetMapping("/bye")

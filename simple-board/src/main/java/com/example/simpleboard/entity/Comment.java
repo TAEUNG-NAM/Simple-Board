@@ -12,7 +12,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Getter
-public class Comment {
+public class Comment extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,7 +21,7 @@ public class Comment {
     @JoinColumn(name = "article_id")
     private Article article;
 
-    @Column
+    @Column // 특정 기능 이용하지 않을 시 생략 가능(ex nullable, name, updatable)
     private String nickname;
 
     @Column

@@ -8,16 +8,16 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 @Getter
-public class Article {
+public class Article extends BaseTimeEntity{
 
     @Id     // PK
     @GeneratedValue(strategy = GenerationType.IDENTITY)     // 자동 생성(DB에서 id 자동 생성)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String title;
 
-    @Column
+    @Column(nullable = false)
     private String content;
 
     public Article patch(Article article) {
