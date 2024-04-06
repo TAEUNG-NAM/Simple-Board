@@ -1,2 +1,3 @@
 
 *.properties
+simple-board/src/main/resources/application.properties
