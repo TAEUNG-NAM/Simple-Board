@@ -30,22 +30,23 @@ public class Oauth2MemberService extends DefaultOAuth2UserService {
 
         String provider = userRequest.getClientRegistration().getRegistrationId();
         String providerId = oAuth2User.getAttribute("sub");
-        String userId = provider + "_" + providerId;    // 중복 가입 발생 방지 (ex google_1234, naver_1234)
+        String username = provider + "_" + providerId;    // 중복 가입 발생 방지 (ex google_1234, naver_1234)
         String email = oAuth2User.getAttribute("email");
 
-        Optional<Member> findMember = memberRepository.findByUserId(userId);  // 가입을 위한 회원 조회
-        if(findMember.isEmpty()){   // DB에 존재하지 않을 시
+        Member findMember = memberRepository.findByUsername(username);  // 가입을 위한 회원 조회
+        if(findMember == null){   // DB에 존재하지 않을 시
             Member member = Member.builder()
-                    .userId(userId)
+                    .username(username)
                     .email(email)
-                    .password(bCryptPasswordEncoder.encode(userId))
-                    .role("ROLE_USER")      // 일반 유저 권한 부여
+                    .password(bCryptPasswordEncoder.encode(username))
+                    .role("ROLE_ADMIN")      // 일반 유저 권한 부여
                     .provider(provider)
                     .providerId(providerId)
                     .build();
             memberRepository.save(member);
         }
         log.info("oAuth2User = " + oAuth2User.getAttributes());
+        log.info("userRequest = " + userRequest.getClientRegistration());
         return oAuth2User;
     }
 }

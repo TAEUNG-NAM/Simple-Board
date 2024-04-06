@@ -19,3 +19,5 @@ INSERT INTO comment(id, article_id, nickname, body) VALUES(6, 5, 'LEE', '초밥'
 INSERT INTO comment(id, article_id, nickname, body) VALUES(7, 6, 'PARK', '롤');
 INSERT INTO comment(id, article_id, nickname, body) VALUES(8, 6, 'NAM', '피파');
 INSERT INTO comment(id, article_id, nickname, body) VALUES(9, 6, 'LEE', '서든');
+
+--INSERT INTO member(id, username, password, email, role) VALUES(1, 'test', '1234', 'aaa@naver.com', 'ROLE_USER');

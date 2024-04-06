@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
 // OAuth2 진행 순서
@@ -15,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 // 4-1. 정보를 통해 회원가입 자동으로 진행, 4-2. 정보 + 추가 정보를 이용해 회원가입
 @Configuration
 @RequiredArgsConstructor
+@EnableWebSecurity
 public class SecurityConfig {
 
     @Autowired
@@ -22,23 +24,30 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-        http.
-                csrf((csrfconfig) ->
-                        csrfconfig
-                                .disable())
-                .headers(headers ->
-                        headers.frameOptions(frameOptionsConfig -> frameOptionsConfig.disable()))    // h2console 이용을 위함
+        http
+                .csrf((csrfConfig) ->
+                        csrfConfig.disable())
+//                .headers(headers ->
+//                        headers.frameOptions(frameOptionsConfig -> frameOptionsConfig.disable()))    // h2console 이용을 위함
                 .cors((corsconfig) ->
                         corsconfig.disable())
                 .httpBasic((httpBasic) ->
                         httpBasic.disable())
                 .authorizeHttpRequests((authorize) ->
                         authorize
-                                .requestMatchers(PathRequest.toH2Console()).permitAll()     // h2console 이용 허용
-                                .requestMatchers("/loginForm").permitAll()      //  로그인 페이지 이용 허용
-                                .anyRequest().authenticated())      // 모든 페이지 인증 필요
+//                                .requestMatchers(PathRequest.toH2Console()).permitAll()     // h2console 이용 허용
+                                .requestMatchers("/login/**","/loginForm/**","/join","/joinProc").permitAll()     //  로그인 페이지 이용 허용
+                                .requestMatchers("/admin").hasRole("ADMIN")     //  관리자 권한 페이지
+                                .anyRequest().permitAll())      // 모든 페이지 인증 필요
+                .exceptionHandling(handling ->
+                        handling.accessDeniedPage("/articles"))    // 접근 거부 페이지 설정(관리자 페이지 젒근)
                 .logout((logout) -> logout
                         .logoutSuccessUrl("/loginForm"))    // 로그아웃 시 로그인 페이지로 이동
+                .formLogin(formL ->
+                        formL
+                                .loginPage("/loginForm")
+                                .loginProcessingUrl("/login")
+                                .defaultSuccessUrl("/articles"))
                 .oauth2Login((oauthLogin) ->
                         oauthLogin
                                 .loginPage("/loginForm")

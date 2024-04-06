@@ -2,10 +2,12 @@ package com.example.simpleboard.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.context.annotation.Role;
 
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class Member extends BaseTimeEntity{
 
@@ -14,7 +16,7 @@ public class Member extends BaseTimeEntity{
     private long id;    // PK
 
     @Column(nullable = false)
-    private String userId;    // 이름
+    private String username;    // 이름
 
     @Column(nullable = false)
     private String password;    // 비밀번호
@@ -25,19 +27,17 @@ public class Member extends BaseTimeEntity{
     @Column(nullable = false)
     private String role;  // 유저 권한
 
-    @Column(nullable = false)
     private String provider;    // 공급자(google, naver ..)
 
-    @Column(nullable = false)
     private String providerId;  // 공급 아이디
 
     @Builder
-    public Member(long id, String userId, String password, String email, String role, String provider, String providerId) {
+    public Member(long id, String username, String password, String role, String email, String provider, String providerId) {
         this.id = id;
-        this.userId = userId;
+        this.username = username;
         this.password = password;
-        this.email = email;
         this.role = role;
+        this.email = email;
         this.provider = provider;
         this.providerId = providerId;
     }
