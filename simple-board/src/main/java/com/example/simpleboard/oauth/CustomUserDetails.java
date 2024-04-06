@@ -13,18 +13,18 @@ import java.util.Map;
 
 @NoArgsConstructor
 @Getter
-public class PrincipalDetails implements OAuth2User, UserDetails {
+public class CustomUserDetails implements OAuth2User, UserDetails {
 
     private Member member;
     private Map<String, Object> attributes;
 
     // 일반 로그인
-    public PrincipalDetails(Member member) {
+    public CustomUserDetails(Member member) {
         this.member = member;
     }
 
     // Oauth2 로그인
-    public PrincipalDetails(Member member, Map<String, Object> attributes) {
+    public CustomUserDetails(Member member, Map<String, Object> attributes) {
         this.member = member;
         this.attributes = attributes;
     }
@@ -54,7 +54,7 @@ public class PrincipalDetails implements OAuth2User, UserDetails {
 
     @Override
     public String getUsername() {
-        return member.getUserId();
+        return member.getUsername();
     }
 
     @Override
