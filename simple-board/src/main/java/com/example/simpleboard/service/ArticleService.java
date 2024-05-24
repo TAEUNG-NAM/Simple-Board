@@ -3,10 +3,13 @@ package com.example.simpleboard.service;
 import com.example.simpleboard.dto.ArticleDto;
 import com.example.simpleboard.entity.Article;
 import com.example.simpleboard.entity.Comment;
+import com.example.simpleboard.entity.Member;
 import com.example.simpleboard.repository.ArticleRepository;
 import com.example.simpleboard.repository.CommentRepository;
+import com.example.simpleboard.repository.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +24,8 @@ public class ArticleService {
     ArticleRepository articleRepository;
     @Autowired
     CommentRepository commentRepository;
+    @Autowired
+    MemberRepository memberRepository;
 
 
     // GET
@@ -40,7 +45,8 @@ public class ArticleService {
     // POST
     @Transactional
     public ArticleDto create(ArticleDto dto) {
-        Article article = dto.toEntity();
+        Member member = memberRepository.findByUsername(dto.getUsername()); // Article Entity -> DTO를 위한 유저정보 조회
+        Article article = dto.toEntity(member);
         if(article.getId() != null)
             return null;
 
@@ -55,7 +61,8 @@ public class ArticleService {
     @Transactional
     public ArticleDto update(Long id, ArticleDto dto) {
         // 수정용 엔티티 생성
-        Article article = dto.toEntity();
+        Member member = memberRepository.findByUsername(dto.getUsername()); // Article Entity -> DTO를 위한 유저정보 조회
+        Article article = dto.toEntity(member);
 
         // 기존 엔티티 조회
         Article target = articleRepository.findById(id).orElse(null);
@@ -75,11 +82,14 @@ public class ArticleService {
     // DELETE
     @Transactional
     public ArticleDto delete(Long id) {
+        // 사용자 id 세션으로 부터 가져오기
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
         // 엔티티 조회
         Article target = articleRepository.findById(id).orElse(null);
 
         // 잘못된 요청 처리
-        if(target == null)
+        if(target == null || !username.equals(target.getMember().getUsername()))
             return null;
 
         // 게시글 삭제 시 작성된 댓글도 함께 삭제
@@ -96,24 +106,24 @@ public class ArticleService {
         return ArticleDto.createArticleDto(target);
     }
 
-    // 트랜잭션 테스트
-    @Transactional
-    public List<Article> createArticles(List<ArticleDto> dtos) {
-        // Dto 묶음을 Entity로 변환
-        List<Article> articleList = dtos.stream()
-                .map(dto -> dto.toEntity())
-                .collect(Collectors.toList());
-
-        // Entity 묶음을 DB에 저장
-        articleList.stream()
-                .forEach(article -> articleRepository.save(article));
-
-        // 강제 예외 발생
-        articleRepository.findById(-1L).orElseThrow(
-                () -> new IllegalArgumentException("결재 실패!")
-        );
-
-        // 결과값 반환
-        return articleList;
-    }
+//    // 트랜잭션 테스트
+//    @Transactional
+//    public List<Article> createArticles(List<ArticleDto> dtos) {
+//        // Dto 묶음을 Entity로 변환
+//        List<Article> articleList = dtos.stream()
+//                .map(dto -> dto.toEntity())
+//                .collect(Collectors.toList());
+//
+//        // Entity 묶음을 DB에 저장
+//        articleList.stream()
+//                .forEach(article -> articleRepository.save(article));
+//
+//        // 강제 예외 발생
+//        articleRepository.findById(-1L).orElseThrow(
+//                () -> new IllegalArgumentException("결재 실패!")
+//        );
+//
+//        // 결과값 반환
+//        return articleList;
+//    }
 }

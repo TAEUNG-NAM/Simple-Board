@@ -16,13 +16,16 @@
         <td>{{title}}</td>
         <td>{{content}}</td>
     </tr>
+    <p>{{member.username}}</p>
     {{/article}}
+
+    <input type="hidden" id="">
     </tbody>
 </table>
 
-<a href="/articles/{{article.id}}/edit"><button class="btn btn-success ms-2">Edit</button></a>
-<button type="button" class="btn btn-danger" id="delete-article-btn">Delete</button>
-<a href="/articles">Home</a>
+<a href="/articles/{{article.id}}/edit"><button class="btn btn-success ms-2">수정</button></a>
+<button type="button" class="btn btn-danger" id="delete-article-btn">삭제</button>
+<a href="/articles">목록</a>
 <hr>
 
 <!--댓글 목록-->

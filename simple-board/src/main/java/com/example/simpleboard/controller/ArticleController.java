@@ -3,10 +3,15 @@ package com.example.simpleboard.controller;
 import com.example.simpleboard.dto.ArticleDto;
 import com.example.simpleboard.dto.CommentDto;
 import com.example.simpleboard.entity.Article;
+import com.example.simpleboard.entity.Member;
 import com.example.simpleboard.repository.ArticleRepository;
+import com.example.simpleboard.repository.MemberRepository;
 import com.example.simpleboard.service.CommentService;
+import com.example.simpleboard.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,10 +29,18 @@ public class ArticleController {
     private ArticleRepository articleRepository;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    MemberService memberService;
 
     // 게시글 생성 페이지
     @GetMapping("/articles/new")
-    public String newArticle(){
+    public String newArticle(Model model){
+        // 사용자 id 세션으로 부터 가져오기
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        model.addAttribute("user", username);
+        log.info("username: " + username);
+
         return "articles/new";
     }
 
@@ -36,7 +49,8 @@ public class ArticleController {
     public String createArticle(ArticleDto dto){
 
         // 1. DTO -> Entity 변환
-        Article article = dto.toEntity();
+        Member member = memberService.findMember(dto.getUsername()); // Article Entity -> DTO를 위한 유저정보 조회
+        Article article = dto.toEntity(member);
         log.info(article.toString());
 
         // 2. Repository를 이용해 Entity를 DB에 저장
@@ -49,11 +63,15 @@ public class ArticleController {
     // 게시글 조회 메소드
     @GetMapping("/articles/{id}")
     public String show(@PathVariable Long id, Model model){
-        // 1. id로 DB에서 Entity를 호출
+        // 0. 사용자 id 세션으로 부터 가져오기
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        // 1. articleId로 DB에서 Entity를 호출
         Article articleEntity = articleRepository.findById(id).orElse(null);
         List<CommentDto> commentDtos = commentService.comments(id);
 
         // 2. 가져온 데이터를 모델에 등록
+        model.addAttribute("user", username);
         model.addAttribute("article", articleEntity);
         model.addAttribute("commentDtos", commentDtos);
 
@@ -62,7 +80,7 @@ public class ArticleController {
     }
 
     // 모든 게시글 조회 메소드
-    @GetMapping("/articles")
+    @GetMapping({"/", "/articles"})
     public String main(Model model){
         // 1. 모든 article을 가져온다
         List<Article> articleEntityList = articleRepository.findAll();
@@ -77,8 +95,15 @@ public class ArticleController {
     // 게시글 수정 메소드 #1
     @GetMapping("/articles/{id}/edit")
     public String edit(@PathVariable Long id, Model model){
+        // 현재 사용자 id 세션으로 부터 가져오기
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
         // 수정할 데이터 호출
         Article target = articleRepository.findById(id).orElse(null);
+
+        if(!username.equals(target.getMember().getUsername())){
+            return "redirect:/articles";
+        }
 
         // 모델에 데이터 등록
         model.addAttribute("article", target);
@@ -89,9 +114,10 @@ public class ArticleController {
 
     // 게시글 수정 메소드 #2 (페이지 form에서 받은 데이터)
     @PostMapping("/articles/update")
-    public String update(ArticleDto form){
+    public String update(ArticleDto dto){
+        Member member = memberService.findMember(dto.getUsername());     // Article Entity -> DTO를 위한 유저정보 조회
         // Dto를 Entity로 변환
-        Article article = form.toEntity();
+        Article article = dto.toEntity(member);
         log.info(article.toString());
 
         // Entity를 DB에 갱신
