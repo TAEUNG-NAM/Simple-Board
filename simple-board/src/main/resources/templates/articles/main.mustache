@@ -2,10 +2,10 @@
 
 <table class="table text-center">
     <thead>
-    <tr>
-        <th scope="col" class="col">ID</th>
-        <th scope="col" class="col-6">TITLE</th>
-        <th scope="col" class="col-6">CONTENT</th>
+    <tr class="table-secondary">
+        <th scope="col" class="col">No.</th>
+        <th scope="col" class="col-8">제목</th>
+        <th scope="col" class="col-4">작성자</th>
     </tr>
     </thead>
     <tbody>
@@ -13,12 +13,12 @@
         <tr>
             <th>{{id}}</th>
             <td><a href="/articles/{{id}}">{{title}}</a></td>
-            <td>{{content}}</td>
+            <td>{{member.username}}</td>
         </tr>
     {{/articleList}}
     </tbody>
 </table>
 
-<a href="/articles/new"><button class="btn btn-primary px-3 m-2">New</button></a>
+<a href="/articles/new"><button class="btn btn-primary px-3 m-2">글쓰기</button></a>
 
 {{>layouts/footer}}

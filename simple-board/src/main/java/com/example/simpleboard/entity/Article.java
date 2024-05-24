@@ -20,6 +20,11 @@ public class Article extends BaseTimeEntity{
     @Column(nullable = false)
     private String content;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")   // 기본키(username)랑 자동으로 JOIN
+    private Member member;
+
+
     public Article patch(Article article) {
         if(article.getTitle() != null)
             this.title = article.getTitle();

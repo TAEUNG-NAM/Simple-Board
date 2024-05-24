@@ -1,16 +1,15 @@
 <div class="card m-2 mt-5" id="new-comment">
     <div class="card-body">
         <form>
-            <!--닉네임 입력-->
-            <div class="mb-3">
-                <label class="form-label">닉네임</label>
-                <input class="form-control form-control-sm" id="new-comment-nickname">
+            <!--닉네임-->
+            <div class="mb-2">
+                <input type="hidden" id=new-comment-nickname value="{{user}}">
+                <label class="form-label fw-bold">{{user}}</label>
             </div>
 
             <!-- 댓글 내용 입력 -->
             <div class="mb-3">
-                <label class="form-label">내용</label>
-                <textarea class="form-control form-control-sm" id="new-comment-body" rows="3"></textarea>
+                <textarea class="form-control form-control-sm" id="new-comment-body" rows="3" placeholder="댓글을 남겨보세요."></textarea>
             </div>
 
             <!-- 히든 인풋 -->

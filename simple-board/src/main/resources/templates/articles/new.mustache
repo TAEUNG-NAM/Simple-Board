@@ -9,8 +9,12 @@
         <label class="form-label">내용</label>
         <textarea class="form-control" rows="3" name="content" id="new-article-content"></textarea>
     </div>
-    <button type="submit" class="btn btn-primary" id="new-article-btn">Create</button>
-    <a href="/articles">Back</a>
+
+    <!--    히든 인풋(유저 아이디)-->
+    <input type="hidden" id="new-article-username" value="{{user}}">
+
+    <button type="submit" class="btn btn-primary" id="new-article-btn">등록</button>
+    <a href="/articles">뒤로가기</a>
 </form>
 
 {{>layouts/footer}}
@@ -25,7 +29,8 @@
         // 새 게시글 객체 생성
         const article = {
             title: document.querySelector("#new-article-title").value,
-            content: document.querySelector("#new-article-content").value
+            content: document.querySelector("#new-article-content").value,
+            username: document.querySelector("#new-article-username").value
         };
 
         //fetch() - API 요청을 JS로 보내줌
@@ -40,13 +45,16 @@
         .then(response => {
             // http 응답에 따른 메세지 출력 및 메인화면 이동
             if(response.ok){
+                alert(response.status);
                 window.location.href = "/articles";
-                alert("게시글이 작성되었습니다.");
             }
             else{
-                alert("게시글 작성 실패..!");
+                throw new Error("서버 응답 오류")
             }
 
+        }).catch(error => {
+                console.error("에러 발생: ", error);
+                alert("게시글 작성 실패: " + error.message); // 에러 메시지를 사용자에게 표시
         });
     });
 }
