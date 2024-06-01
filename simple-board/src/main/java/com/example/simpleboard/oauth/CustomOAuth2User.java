@@ -34,11 +34,13 @@ public class CustomOAuth2User implements OAuth2User {
         return collection;
     }
 
+    // 회원아이디
     @Override
     public String getName() {
-        return memberDto.getName();
+        return memberDto.getUsername();
     }
 
+    // 회원아이디
     public String getUsername(){
         return memberDto.getUsername();
     }

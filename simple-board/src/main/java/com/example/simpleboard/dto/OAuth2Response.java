@@ -1,5 +1,6 @@
 package com.example.simpleboard.dto;
 
+
 public interface OAuth2Response {
     // 서비스 제공자(google, naver, kakao)
     String getProvider();

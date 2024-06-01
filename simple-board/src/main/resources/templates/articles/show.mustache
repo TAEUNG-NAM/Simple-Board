@@ -3,9 +3,9 @@
 <table class="table text-center" id="article-table">
     <thead>
     <tr>
-        <th scope="col" class="col">ID</th>
-        <th scope="col" class="col-6">TITLE</th>
-        <th scope="col" class="col-6">CONTENT</th>
+        <th scope="col" class="col">No.</th>
+        <th scope="col" class="col-6">제목</th>
+        <th scope="col" class="col-6">내용</th>
     </tr>
     </thead>
     <tbody>
@@ -16,22 +16,23 @@
         <td>{{title}}</td>
         <td>{{content}}</td>
     </tr>
-    <p>{{member.username}}</p>
     {{/article}}
 
-    <input type="hidden" id="">
     </tbody>
 </table>
 
-<a href="/articles/{{article.id}}/edit"><button class="btn btn-success ms-2">수정</button></a>
-<button type="button" class="btn btn-danger" id="delete-article-btn">삭제</button>
-<a href="/articles">목록</a>
+<div class="buttons d-flex justify-content-end">
+    <a href="/articles/{{article.id}}/edit"><button class="btn btn-success mx-1">수정</button></a>
+    <button type="button" class="btn btn-danger mx-1" id="delete-article-btn">삭제</button>
+    <a href="/articles" class="mx-2 fw-bold">목록</a>
+</div>
 <hr>
 
 <!--댓글 목록-->
 {{>comments/_comments}}
 
 {{>layouts/footer}}
+
 
 <!-- 게시글 삭제 API 요청 -->
 <script>
@@ -45,6 +46,7 @@
         articleId = document.querySelector("#article-id").value;    // 게시글 삭제를 위한 ID
         const url = `/api/articles/${articleId}`;
         fetch(url, {
+            credentials: 'include',
             method: "DELETE",
             headers: {
                 "Content-Type" : "application/json"

@@ -2,7 +2,6 @@ package com.example.simpleboard.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.context.annotation.Role;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -30,10 +29,10 @@ public class Member extends BaseTimeEntity{
     @Column(nullable = false)
     private String role;  // 유저 권한
 
-    private String refresh;
+    private String access;
 
     @Transactional
-    public void setRefresh(String token){
-        this.refresh = token;
+    public void setAccess(String token){
+        this.access = token;
     }
 }

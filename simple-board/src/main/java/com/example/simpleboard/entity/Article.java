@@ -21,8 +21,9 @@ public class Article extends BaseTimeEntity{
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")   // 기본키(username)랑 자동으로 JOIN
+    @JoinColumn(name = "member_id")   // 기본키(username)랑 자동으로 JOIN
     private Member member;
+
 
 
     public Article patch(Article article) {
