@@ -16,9 +16,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class Oauth2MemberService extends DefaultOAuth2UserService {
     @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    @Autowired
     private MemberRepository memberRepository;
 
     @Override
@@ -27,6 +24,8 @@ public class Oauth2MemberService extends DefaultOAuth2UserService {
         // 구글로그인 버튼 클릭 -> 구글로그인창 -> 로그인완료 -> code를 리턴(OAuth-Client라이브러리) -> Access Token요청
         // userRequest 정보 -> loadUser함수 호출 -> 구글로부터 회원프로필 받음
 
+        // 로그인 정보 로그
+        log.info(oAuth2User.toString());
         String provider = userRequest.getClientRegistration().getRegistrationId();  // OAuth2 서비스 제공자(ex google, naver, kakao)
 
         OAuth2Response oAuth2Response = null;

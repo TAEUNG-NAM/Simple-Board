@@ -37,6 +37,7 @@
         // fetch() - JS를 통한 API 요청 메소드
         const url = `/api/articles/${newArticle.id}`;
         fetch(url, {
+            credentials: "include",
             method: "PATCH",
             body: JSON.stringify(newArticle),
             headers: {

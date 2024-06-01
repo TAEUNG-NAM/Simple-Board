@@ -3,8 +3,8 @@
         <form>
             <!--닉네임-->
             <div class="mb-2">
-                <input type="hidden" id=new-comment-nickname value="{{user}}">
-                <label class="form-label fw-bold">{{user}}</label>
+                <input type="hidden" id=new-comment-username value="{{member.username}}">
+                <label class="form-label fw-bold">{{member.name}}</label>
             </div>
 
             <!-- 댓글 내용 입력 -->
@@ -12,7 +12,7 @@
                 <textarea class="form-control form-control-sm" id="new-comment-body" rows="3" placeholder="댓글을 남겨보세요."></textarea>
             </div>
 
-            <!-- 히든 인풋 -->
+            <!-- 히든 인풋(ArticleID) -->
             {{#article}}
             <input type="hidden" id="new-comment-article-id" value="{{id}}">
             {{/article}}
@@ -22,6 +22,7 @@
     </div>
 </div>
 
+<!--댓글 작성 API 요청-->
 <script>
 {
     <!--    버튼 변수화    -->
@@ -31,7 +32,7 @@
     commentCreateBtn.addEventListener("click", function() {
         // 새 댓글 객체 생성
         const comment = {
-            nickname: document.querySelector("#new-comment-nickname").value,
+            username: document.querySelector("#new-comment-username").value,
             body: document.querySelector("#new-comment-body").value,
             article_id: document.querySelector("#new-comment-article-id").value,
         };

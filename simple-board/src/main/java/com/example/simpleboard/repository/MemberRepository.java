@@ -12,10 +12,10 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
     Member findByUsername(String username);
 
-    Boolean existsByRefresh(String refresh);
+    Boolean existsByAccess(String access);
 
     @Modifying
     @Transactional
-    @Query(value = "update Member set refresh = null where refresh = :refresh", nativeQuery = true)
-    void deleteByRefresh(@Param("refresh")String refresh);
+    @Query(value = "update Member set access = null where access = :access", nativeQuery = true)
+    void deleteByAccess(@Param("access")String access);
 }

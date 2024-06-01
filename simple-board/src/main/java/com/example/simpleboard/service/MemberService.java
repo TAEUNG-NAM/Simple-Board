@@ -16,8 +16,6 @@ public class MemberService {
     @Autowired
     MemberRepository memberRepository;
 
-    @Autowired
-    BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public Member findMember(String username){
         return memberRepository.findByUsername(username);

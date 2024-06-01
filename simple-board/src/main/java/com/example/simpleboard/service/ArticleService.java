@@ -60,16 +60,29 @@ public class ArticleService {
     // PATCH
     @Transactional
     public ArticleDto update(Long id, ArticleDto dto) {
-        // 수정용 엔티티 생성
-        Member member = memberRepository.findByUsername(dto.getUsername()); // Article Entity -> DTO를 위한 유저정보 조회
-        Article article = dto.toEntity(member);
+        // 쿠키를 통해서 현재 사용자 정보 획득
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info("Username : {}", username);
 
         // 기존 엔티티 조회
         Article target = articleRepository.findById(id).orElse(null);
 
-        // 잘못된 요청 처리(기존 데이터가 없거나, id 불일치)
-        if (target == null || id != article.getId() || (article.getTitle()  == null && article.getContent() == null))
+        // 세션의 정보와 기존 Article 작성자가 다르면 수정 거부
+        if(!target.getMember().getUsername().equals(username)){
+            log.info("수정 권한 없음");
             return null;
+        }
+
+        // 수정용 엔티티 생성
+        Member member = memberRepository.findByUsername(username); // Article Entity -> DTO를 위한 유저정보 조회
+        Article article = dto.toEntity(member);
+
+
+        // 잘못된 요청 처리(기존 데이터가 없거나, id 불일치)
+        if (target == null || id != article.getId() || (article.getTitle()  == null && article.getContent() == null)){
+            log.info("잘못된 요청 처리(기존 데이터가 없거나, articleId 불일치)");
+            return null;
+        }
 
         // 새로운 엔티티 패치 및 저장
         Article updated = target.patch(article);
@@ -82,15 +95,17 @@ public class ArticleService {
     // DELETE
     @Transactional
     public ArticleDto delete(Long id) {
-        // 사용자 id 세션으로 부터 가져오기
+        // 사용자 id 세션(쿠키)으로 부터 가져오기
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         // 엔티티 조회
         Article target = articleRepository.findById(id).orElse(null);
 
         // 잘못된 요청 처리
-        if(target == null || !username.equals(target.getMember().getUsername()))
+        if(target == null || !username.equals(target.getMember().getUsername())){
+            log.info("존재하지 않는 게시글 or 삭제 권한 없음");
             return null;
+        }
 
         // 게시글 삭제 시 작성된 댓글도 함께 삭제
         List<Comment> comments =  commentRepository.findByArticleId(id);    // 게시글ID를 통해 모든 댓글 불러오기
@@ -103,6 +118,7 @@ public class ArticleService {
         }
         // 모든 댓글 삭제 후 엔티티 삭제 및 결과 반환
         articleRepository.delete(target);
+        log.info("게시글 삭제 완료!");
         return ArticleDto.createArticleDto(target);
     }
 

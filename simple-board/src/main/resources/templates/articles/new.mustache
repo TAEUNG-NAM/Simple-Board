@@ -11,7 +11,7 @@
     </div>
 
     <!--    히든 인풋(유저 아이디)-->
-    <input type="hidden" id="new-article-username" value="{{user}}">
+    <input type="hidden" id="new-article-username" value="{{username}}">
 
     <button type="submit" class="btn btn-primary" id="new-article-btn">등록</button>
     <a href="/articles">뒤로가기</a>
@@ -19,6 +19,7 @@
 
 {{>layouts/footer}}
 
+<!--게시글 생성 API 요청-->
 <script>
 {
     // article 생성 버튼 변수화
