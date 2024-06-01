@@ -1,5 +1,6 @@
 {{>layouts/header}}
 
+<input type="hidden" id="cookie" value="{{accessCookie}}">
 <table class="table text-center">
     <thead>
     <tr class="table-secondary">
@@ -13,12 +14,40 @@
         <tr>
             <th>{{id}}</th>
             <td><a href="/articles/{{id}}">{{title}}</a></td>
-            <td>{{member.username}}</td>
+            <td>{{member.name}}</td>
         </tr>
     {{/articleList}}
     </tbody>
 </table>
 
+<div class="d-flex justify-content-end me-3">
 <a href="/articles/new"><button class="btn btn-primary px-3 m-2">글쓰기</button></a>
+<!--    <button class="btn btn-outline-info btn-sm" id="new-write-btn">글쓰기</button>-->
+</div>
 
 {{>layouts/footer}}
+
+
+<!-- Access 토큰 Cookie -> LocalStorage(Header) 담기 -->
+<script>
+    window.addEventListener("DOMContentLoaded", () => {
+        // 주어진 이름의 쿠키를 반환하는데,
+        // 조건에 맞는 쿠키가 없다면 undefined를 반환합니다.
+        const access = document.querySelector("#cookie").value;
+        if(access === "0000"){
+            document.querySelector("#login-btn").style.display = 'block';
+            document.querySelector("#logout-btn").style.display = 'none';
+        }
+    })
+</script>
+
+
+<!--&lt;!&ndash; 글쓰기 API 요청 &ndash;&gt;-->
+<!--<script>-->
+<!--    const writeBtn = document.querySelector("#new-write-btn");-->
+
+<!--    writeBtn.addEventListener("click", () => {-->
+<!--        const access = localStorage.getItem("access");-->
+<!--        console.log(access);-->
+<!--    })-->
+<!--</script>-->

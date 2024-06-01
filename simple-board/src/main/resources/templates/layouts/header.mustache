@@ -15,12 +15,13 @@
         <div>
             <form class="d-flex" role="search">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
+                <button class="btn btn-outline-success text-nowrap" type="submit">검색</button>
             </form>
         </div>
     </div>
     <div class="container justify-content-end">
-        <a href="/logout">로그아웃</a>
+        <button class="btn btn-outline-secondary btn-sm" id="logout-btn">로그아웃</button>
+        <a href="/login" style="text-decoration-line: none"><button class="btn btn-outline-dark btn-sm" id="login-btn" style="display: none">&nbsp;로그인&nbsp;</button></a>
     </div>
 </nav>
 
@@ -31,3 +32,39 @@
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 {{/msg}}
+
+
+<!--<script>-->
+<!--    window.addEventListener("DOMContentLoaded", () => {-->
+<!--        const access = document.querySelector("#cookie").value;-->
+<!--        if(access !== "0000"){-->
+<!--            console.log(access);-->
+<!--        }-->
+<!--    })-->
+<!--</script>-->
+
+<!-- 로그아웃 API 요청 -->
+<script>
+    // 로그아웃 버튼을 선택
+    const logoutBtn = document.querySelector("#logout-btn");
+
+    // 로그아웃 버튼에 클릭 이벤트 리스너 추가
+    logoutBtn.addEventListener("click", () => {
+        const url = "/logout";
+
+        // 로그아웃 요청을 서버로 전송
+        fetch(url, {
+            credentials: "include", // 쿠키를 포함하여 요청
+            method: "POST" // POST 메서드 사용
+        }).then(response => {
+            // 로그아웃이 성공하면 로컬 스토리지와 세션 스토리지 비우기
+            localStorage.clear();
+            sessionStorage.clear();
+            // 로그인 페이지로 리디렉션
+            window.location.href = "/articles";
+        }).catch((err) => {
+            // 오류 발생 시 경고 메시지 표시
+            alert(err);
+        });
+    });
+</script>
