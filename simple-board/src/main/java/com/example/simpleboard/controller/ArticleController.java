@@ -6,34 +6,42 @@ import com.example.simpleboard.entity.Article;
 import com.example.simpleboard.entity.Member;
 import com.example.simpleboard.oauth.CustomOAuth2User;
 import com.example.simpleboard.repository.ArticleRepository;
-import com.example.simpleboard.repository.MemberRepository;
+import com.example.simpleboard.service.ArticleService;
 import com.example.simpleboard.service.CommentService;
 import com.example.simpleboard.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
 @Slf4j
 public class ArticleController {
 
-    @Autowired
-    private ArticleRepository articleRepository;
-    @Autowired
-    private CommentService commentService;
-    @Autowired
-    MemberService memberService;
+    private final CommentService commentService;
+    private final MemberService memberService;
+    private final ArticleRepository articleRepository;
+
+    public ArticleController(CommentService commentService, MemberService memberService, ArticleRepository articleRepository) {
+        this.commentService = commentService;
+        this.memberService = memberService;
+        this.articleRepository = articleRepository;
+    }
 
     // 게시글 생성 페이지
     @GetMapping("/articles/new")
@@ -85,15 +93,38 @@ public class ArticleController {
 
     // 모든 게시글 조회 메소드
     @GetMapping({"/", "/articles"})
-    public String main(@CookieValue(value = "access", required = false, defaultValue = "0000") String access,  Model model){
-        // 1. 모든 article을 가져온다
-        List<Article> articleEntityList = articleRepository.findAll();
+    public String main(@CookieValue(value = "access", required = false, defaultValue = "0000") String access,
+                       @RequestParam(name = "page", defaultValue = "1")Integer page,
+                       Model model){
+        // required 속성을 true로 지정 시, value 속성의 이름을 가진 쿠키가 존재하지 않을 시에 스프링 MVC는 익셉션을 발생시킨다.
 
+        // 0. Page 설정(페이지 수, 정렬기준)
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("id"));
+        // 페이지 index 0부터 시작(view에서 1page 누르면 -1 값으로 index 호출)
+        Pageable pageable = PageRequest.of(page-1, 10, Sort.by(sorts)); // (현재페이지, 게시글 갯수[한페이지] 정렬기준)
+
+        // 1. 모든 article을 가져온다
+        Page<Article> articleEntityList = articleRepository.findAll(pageable);
+
+        // 2-1. Page의 시작과 끝 계산
+        int endPage = Math.min(articleEntityList.getTotalPages(), (int)Math.floor((articleEntityList.getPageable().getPageNumber()+10)/10.0)*10);   // (현재 페이지 + 10)1의 자리 내림 = 끝 페이지(10, 20, 30...)
+        int startPage = Math.max(1, endPage-9);
+        List<Integer> pages = new ArrayList<>();
+        for(int i = startPage; i <= endPage; i++){
+            pages.add(i);
+        }
+        // 2-2. View로 전달
+        model.addAttribute("pages", pages);
+        model.addAttribute("previous", pageable.previousOrFirst().getPageNumber()+1);
+        model.addAttribute("next", pageable.next().getPageNumber()+1);
+        model.addAttribute("hasNext", articleEntityList.hasNext());
+
+        // 3. 가져온 article 묶음, Cookie(Token) 뷰로 전달
         model.addAttribute("accessCookie", access);
-        // 2. 가져온 article 묶음을 뷰로 전달
         model.addAttribute("articleList", articleEntityList);
 
-        // 3. 페이지 반환
+        // 4. 페이지 반환
         return "articles/main";
     }
 
