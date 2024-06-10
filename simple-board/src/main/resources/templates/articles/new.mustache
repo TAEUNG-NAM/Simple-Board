@@ -7,7 +7,7 @@
     </div>
     <div class="mb-3">
         <label class="form-label">내용</label>
-        <textarea class="form-control" rows="3" name="content" id="new-article-content"></textarea>
+        <textarea class="form-control" rows="3" style="height: 50vh; resize: none" name="content" id="new-article-content"></textarea>
     </div>
 
     <!--    히든 인풋(유저 아이디)-->
@@ -35,22 +35,19 @@
         };
 
         //fetch() - API 요청을 JS로 보내줌
-        const url = "/api/articles";
+        const url = "http://localhost:8080/api/articles";
         fetch(url, {
             method: "POST",
             body: JSON.stringify(article),
             headers:{
-                "Content-Type":"application/json"
+                "Content-Type": "application/json"
             }
         })
         .then(response => {
             // http 응답에 따른 메세지 출력 및 메인화면 이동
             if(response.ok){
-                alert(response.status);
                 window.location.href = "/articles";
-            }
-            else{
-                throw new Error("서버 응답 오류")
+                alert("게시글 작성 완료!");
             }
 
         }).catch(error => {

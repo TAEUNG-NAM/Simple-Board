@@ -20,6 +20,24 @@
     </tbody>
 </table>
 
+<!-- 페이징 처리 -->
+<div class="d-flex justify-content-center my-4">
+    <ul class="pagination">
+        <a href="?page={{previous}}"><button class="btn"><이전</button></a>
+        {{#pages}}
+            <li class="page-item">
+                <a class="page-link" href="?title={{title}}&page={{.}}">{{.}}</a>
+            </li>
+        {{/pages}}
+        {{#hasNext}}
+            <a href="?title={{title}}&page={{next}}"><button class="btn">다음></button></a>
+        {{/hasNext}}
+        {{^hasNext}}
+            <a><button class="btn" >다음></button></a>
+        {{/hasNext}}
+    </ul>
+</div>
+
 <div class="d-flex justify-content-end me-3">
 <a href="/articles/new"><button class="btn btn-primary px-3 m-2">글쓰기</button></a>
 <!--    <button class="btn btn-outline-info btn-sm" id="new-write-btn">글쓰기</button>-->

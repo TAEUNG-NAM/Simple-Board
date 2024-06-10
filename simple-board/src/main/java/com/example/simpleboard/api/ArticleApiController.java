@@ -3,14 +3,20 @@ package com.example.simpleboard.api;
 import com.example.simpleboard.dto.ArticleDto;
 import com.example.simpleboard.entity.Article;
 import com.example.simpleboard.service.ArticleService;
+import jakarta.websocket.server.PathParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@Slf4j
 public class ArticleApiController {
 
     @Autowired
@@ -35,9 +41,12 @@ public class ArticleApiController {
     @PostMapping("/api/articles")
     public ResponseEntity<ArticleDto> create(@RequestBody ArticleDto dto){
         ArticleDto created = articleService.create(dto);
-        return (created != null) ?
-                ResponseEntity.status(HttpStatus.OK).body(created) :
-                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        if(created != null){
+            log.info(created.toString());
+            return ResponseEntity.status(HttpStatus.OK).body(created);
+        } else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     // PATCH
@@ -57,13 +66,5 @@ public class ArticleApiController {
                 ResponseEntity.status(HttpStatus.OK).body(deleted) :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
-
-//    // 트랜잭션 -> 실패 -> 롤백!
-//    @PostMapping("/api/transaction-test")
-//    public ResponseEntity<List<Article>> transactionTest(@RequestBody List<ArticleDto> dtos){
-//        List<Article> articleList = articleService.createArticles(dtos);
-//        return (articleList != null) ?
-//                ResponseEntity.status(HttpStatus.OK).body(articleList) :
-//                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//    }
+    
 }

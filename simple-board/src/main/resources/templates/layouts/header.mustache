@@ -11,11 +11,12 @@
 <!--navigation-->
 <nav class="navbar bg-light">
     <div class="container-fluid justify-content-center">
+        <img src="https://i.ibb.co/YbFcpTL/3.png" alt="로고" class="mt-2 me-2" width="70px">
         <a class="navbar-brand fs-2" href="/articles">SimpleBoard</a>
         <div>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success text-nowrap" type="submit">검색</button>
+            <form class="d-flex" role="search" action="/articles" method="GET">
+                <input class="form-control me-2" type="search" placeholder="Search" id="search-input" aria-label="Search" name="title">
+                <button class="btn btn-outline-success text-nowrap" type="submit" id="search-btn">검색</button>
             </form>
         </div>
     </div>
@@ -33,15 +34,6 @@
 </div>
 {{/msg}}
 
-
-<!--<script>-->
-<!--    window.addEventListener("DOMContentLoaded", () => {-->
-<!--        const access = document.querySelector("#cookie").value;-->
-<!--        if(access !== "0000"){-->
-<!--            console.log(access);-->
-<!--        }-->
-<!--    })-->
-<!--</script>-->
 
 <!-- 로그아웃 API 요청 -->
 <script>
