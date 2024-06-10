@@ -95,6 +95,7 @@ public class ArticleController {
     @GetMapping({"/", "/articles"})
     public String main(@CookieValue(value = "access", required = false, defaultValue = "0000") String access,
                        @RequestParam(name = "page", defaultValue = "1")Integer page,
+                       @RequestParam(name = "title", defaultValue = "")String title,
                        Model model){
         // required 속성을 true로 지정 시, value 속성의 이름을 가진 쿠키가 존재하지 않을 시에 스프링 MVC는 익셉션을 발생시킨다.
 
@@ -105,20 +106,21 @@ public class ArticleController {
         Pageable pageable = PageRequest.of(page-1, 10, Sort.by(sorts)); // (현재페이지, 게시글 갯수[한페이지] 정렬기준)
 
         // 1. 모든 article을 가져온다
-        Page<Article> articleEntityList = articleRepository.findAll(pageable);
+        Page<Article> articleEntityList = articleRepository.findByTitleContaining(title, pageable);
 
         // 2-1. Page의 시작과 끝 계산
         int endPage = Math.min(articleEntityList.getTotalPages(), (int)Math.floor((articleEntityList.getPageable().getPageNumber()+10)/10.0)*10);   // (현재 페이지 + 10)1의 자리 내림 = 끝 페이지(10, 20, 30...)
         int startPage = Math.max(1, endPage-9);
         List<Integer> pages = new ArrayList<>();
         for(int i = startPage; i <= endPage; i++){
-            pages.add(i);
+            pages.add(i);   // 첫 페이지부터 끝 페이지(ex 1~10, 11~20, 21~30)
         }
         // 2-2. View로 전달
-        model.addAttribute("pages", pages);
-        model.addAttribute("previous", pageable.previousOrFirst().getPageNumber()+1);
-        model.addAttribute("next", pageable.next().getPageNumber()+1);
-        model.addAttribute("hasNext", articleEntityList.hasNext());
+        model.addAttribute("title", title);
+        model.addAttribute("pages", pages); // 페이지 번호가 담긴 List(1~10, 11~20, 21~30 .. )
+        model.addAttribute("previous", pageable.previousOrFirst().getPageNumber()+1);   // 이전 페이지 or 첫 페이지(0)
+        model.addAttribute("next", pageable.next().getPageNumber()+1);  // 다음 페이지
+        model.addAttribute("hasNext", articleEntityList.hasNext()); // 다음 게시글 유무 체크
 
         // 3. 가져온 article 묶음, Cookie(Token) 뷰로 전달
         model.addAttribute("accessCookie", access);

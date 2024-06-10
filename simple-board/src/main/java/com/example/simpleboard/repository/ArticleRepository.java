@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface ArticleRepository extends JpaRepository<Article, Long> {
-    @Override
-    Page<Article> findAll(Pageable pageable);
 
     @Query(value = "SELECT *" +
                     "FROM Article" +
                     "WHERE title LIKE %:title%", nativeQuery = true)
     List<Article> findByTitle(@Param("title")String title);
+
+    Page<Article> findByTitleContaining(String title, Pageable pageable);
 }
