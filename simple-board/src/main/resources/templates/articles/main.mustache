@@ -6,7 +6,8 @@
     <tr class="table-secondary">
         <th scope="col" class="col">No.</th>
         <th scope="col" class="col-8">제목</th>
-        <th scope="col" class="col-4">작성자</th>
+        <th scope="col" class="col-2">작성자</th>
+        <th scope="col" class="col-2">작성일</th>
     </tr>
     </thead>
     <tbody>
@@ -15,6 +16,7 @@
             <th>{{id}}</th>
             <td><a href="/articles/{{id}}">{{title}}</a></td>
             <td>{{member.name}}</td>
+            <td id="created-date">{{createdAt}}</td>
         </tr>
     {{/articleList}}
     </tbody>
@@ -45,6 +47,31 @@
 
 {{>layouts/footer}}
 
+<!--작성일 Formating-->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get all elements with the class "created-date"
+        var dateElements = document.querySelectorAll('#created-date');
+
+        dateElements.forEach(function(element) {
+            // Get the date string from the element
+            var dateString = element.textContent;
+
+            // Parse the date string into a Date object
+            var date = new Date(dateString);
+
+            // Format the date in Korean style
+            var formattedDate = date.toLocaleDateString('ko-KR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            // Set the formatted date back to the element
+            element.textContent = formattedDate;
+        });
+    });
+</script>
 
 <!-- Access 토큰 Cookie -> LocalStorage(Header) 담기 -->
 <script>
@@ -59,13 +86,3 @@
     })
 </script>
 
-
-<!--&lt;!&ndash; 글쓰기 API 요청 &ndash;&gt;-->
-<!--<script>-->
-<!--    const writeBtn = document.querySelector("#new-write-btn");-->
-
-<!--    writeBtn.addEventListener("click", () => {-->
-<!--        const access = localStorage.getItem("access");-->
-<!--        console.log(access);-->
-<!--    })-->
-<!--</script>-->

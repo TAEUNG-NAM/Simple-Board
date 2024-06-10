@@ -66,5 +66,4 @@ public class ArticleApiController {
                 ResponseEntity.status(HttpStatus.OK).body(deleted) :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
-    
 }

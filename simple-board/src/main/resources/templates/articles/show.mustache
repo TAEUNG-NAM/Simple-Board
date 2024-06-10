@@ -7,8 +7,9 @@
             {{#article}}
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="fw-bold">{{title}}</h3>
-                        <span class="text-end" style="font-weight: bold;text-align: right;display: block">{{article.member.name}}</span>
+                        <h3 class="text-center fw-bold">{{title}}</h3>
+                        <span class="text-end" style="display: block">{{article.member.name}}</span>
+                        <span class="text-end" id="created-date" style="display: block">{{article.createdAt}}</span>
                     </div>
                     <div class="card-body" style="height: 50vh;">
                         <p>{{content}}</p>
@@ -36,6 +37,28 @@
 
 {{>layouts/footer}}
 
+<!--작성일 Formating-->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the date string from the hidden span
+        var dateString = document.querySelector("#created-date").textContent;
+
+        // Parse the date string into a Date object
+        var date = new Date(dateString);
+
+        // Format the date
+        var formattedDate = date.toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        // Set the formatted date back to the span
+        document.querySelector('#created-date').textContent = formattedDate;
+    });
+</script>
 
 <!-- 게시글 삭제 API 요청 -->
 <script>
