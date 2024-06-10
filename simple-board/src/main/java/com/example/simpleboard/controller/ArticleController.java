@@ -91,7 +91,7 @@ public class ArticleController {
         return "articles/show";
     }
 
-    // 모든 게시글 조회 메소드
+    // 모든 게시글 조회(및 검색) 메소드
     @GetMapping({"/", "/articles"})
     public String main(@CookieValue(value = "access", required = false, defaultValue = "0000") String access,
                        @RequestParam(name = "page", defaultValue = "1")Integer page,
@@ -116,7 +116,7 @@ public class ArticleController {
             pages.add(i);   // 첫 페이지부터 끝 페이지(ex 1~10, 11~20, 21~30)
         }
         // 2-2. View로 전달
-        model.addAttribute("title", title);
+        model.addAttribute("title", title); // 검색 내용
         model.addAttribute("pages", pages); // 페이지 번호가 담긴 List(1~10, 11~20, 21~30 .. )
         model.addAttribute("previous", pageable.previousOrFirst().getPageNumber()+1);   // 이전 페이지 or 첫 페이지(0)
         model.addAttribute("next", pageable.next().getPageNumber()+1);  // 다음 페이지

@@ -10,10 +10,10 @@
         </div>
         <div class="mb-3">
             <label class="form-label">내용</label>
-            <textarea class="form-control" rows="3" id="update-article-content">{{content}}</textarea>
+            <textarea class="form-control" rows="3" id="update-article-content" style="height: 50vh;resize: none">{{content}}</textarea>
         </div>
-        <button type="button" class="btn btn-primary" id="update-article-btn">Submit</button>
-        <a href="/articles/{{id}}">Back</a>
+        <button type="button" class="btn btn-primary" id="update-article-btn">수정</button>
+        <a href="/articles/{{id}}">돌아가기</a>
     </form>
 {{/article}}
 {{>layouts/footer}}
