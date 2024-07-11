@@ -23,7 +23,7 @@
 ![read](https://i.ibb.co/chCZvhF/image.png)   
 ![update](https://i.ibb.co/QMHwHMF/image.png)   
 ![comment](https://i.ibb.co/WvQfsNr/image.png)   
-![comment2](https://i.ibb.co/WvQfsNr/image.png)   
+![comment2](https://i.ibb.co/dPR1Lyr/image.png)   
 
 <br>
 
